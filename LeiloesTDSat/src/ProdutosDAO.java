@@ -7,36 +7,32 @@
  *
  * @author Adm
  */
-
+import conexao.Conexao;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-
 public class ProdutosDAO {
-    
-    Connection conn;
-    PreparedStatement prep;
-    ResultSet resultset;
+
     ArrayList<ProdutosDTO> listagem = new ArrayList<>();
-    
-    public void cadastrarProduto (ProdutosDTO produto){
-        
-        
-        //conn = new conectaDAO().connectDB();
-        
-        
+
+    private Conexao conexao;
+    private Connection conn;
+
+    public ProdutosDAO() {
+        this.conexao = new Conexao();
+        this.conn = this.conexao.getConexao();
     }
-    
-    public ArrayList<ProdutosDTO> listarProdutos(){
-        
+
+    public void cadastrarProduto(ProdutosDTO produto) {
+
+    }
+
+    public ArrayList<ProdutosDTO> listarProdutos() {
+
         return listagem;
     }
-    
-    
-    
-        
-}
 
+}
