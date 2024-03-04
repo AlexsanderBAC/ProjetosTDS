@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProdutosDAO {
 
@@ -40,6 +41,37 @@ public class ProdutosDAO {
         } catch (SQLException e) {
             System.out.println("Erro ao inserir o produto: " + e.getMessage());
         }    
+    }
+    
+    public List<ProdutosDTO> getProdutosDTO() {
+        String sql = "select id, nome, valor, status from produtos;"; //LIKE nos permite pesquisar por partes de um nome, ao invés de pesquisarmos por todo nome
+
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            //Como temos um parâmetro, devemos defini-lo
+            //Método para poder executar o SELECT.
+            //Os resultados obtivos pela consulta serão armazenados na variavel ResultSet
+            ResultSet rs = stmt.executeQuery();
+
+            List<ProdutosDTO> listaProdutosDTO = new ArrayList<>();
+
+            while (rs.next()) { //.next retorna verdadeiro caso exista uma próxima posição dentro do array
+                ProdutosDTO produto = new ProdutosDTO();
+
+                produto.setId(rs.getInt("id"));
+                produto.setNome(rs.getString("nome"));
+                produto.setValor(rs.getInt("valor"));
+                produto.setStatus(rs.getString("status"));
+
+                listaProdutosDTO.add(produto);
+            }
+
+            return listaProdutosDTO;
+
+            //Se o método entrar no "Catch" quer dizer que não encontrou nenhum filme, então damos um "return null"
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public ArrayList<ProdutosDTO> listarProdutos() {

@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -12,6 +13,24 @@ import javax.swing.table.DefaultTableModel;
  * @author Adm
  */
 public class listagemVIEW extends javax.swing.JFrame {
+    
+    private void preencherTabelaProdutos() {
+
+        ProdutosDAO produtoDao = new ProdutosDAO();
+
+        List<ProdutosDTO> listaProdutosDTO = produtoDao.getProdutosDTO();
+
+        DefaultTableModel TabelaCadastroProduto = (DefaultTableModel) listaProdutos.getModel();
+
+        for (ProdutosDTO pd : listaProdutosDTO) { //em cada volta do laço for, o mesmo adiciona um dado(cliente) dentro do objeto cc
+            Object[] obj = new Object[]{
+                pd.getId(), //id
+                pd.getNome(),
+                pd.getValor(),
+                pd.getStatus()};
+            TabelaCadastroProduto.addRow(obj);
+        }
+    }
 
     /**
      * Creates new form listagemVIEW
@@ -19,6 +38,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     public listagemVIEW() {
         initComponents();
         listarProdutos();
+        preencherTabelaProdutos();
         setLocationRelativeTo(null);
     }
 
@@ -42,7 +62,7 @@ public class listagemVIEW extends javax.swing.JFrame {
         btnVendas = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         listaProdutos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
