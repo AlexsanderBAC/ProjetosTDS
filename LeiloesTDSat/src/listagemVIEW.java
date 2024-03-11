@@ -1,6 +1,7 @@
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -37,7 +38,7 @@ public class listagemVIEW extends javax.swing.JFrame {
      */
     public listagemVIEW() {
         initComponents();
-        listarProdutos();
+        LimparTabela();
         preencherTabelaProdutos();
         setLocationRelativeTo(null);
     }
@@ -157,12 +158,29 @@ public class listagemVIEW extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
-        String id = id_produto_venda.getText();
+        int idPesquisa = Integer.parseInt(id_produto_venda.getText());
+        String status = "";
         
         ProdutosDAO produtosdao = new ProdutosDAO();
+        ProdutosDTO produto = produtosdao.getProduto(idPesquisa);
         
+        if (produto == null) {
+            JOptionPane.showMessageDialog(this, "Produto não encontrado!");
+        } else {
+           status = produto.getStatus();
+           String novoStatus = status;
+           if (novoStatus != "A Venda"){
+               novoStatus = "Vendido";
+               JOptionPane.showMessageDialog(this, "O produto foi vendido");
+           }
+        produto.setStatus(novoStatus);
+        produtosdao.venderProduto(produto);
+        id_produto_venda.setText("");
+        LimparTabela();
+        preencherTabelaProdutos();
+        }
         //produtosdao.venderProduto(Integer.parseInt(id));
-        listarProdutos();
+        //listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
@@ -222,7 +240,7 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(){
+    private void LimparTabela(){
         try {
             ProdutosDAO produtosdao = new ProdutosDAO();
             

@@ -40,9 +40,51 @@ public class ProdutosDAO {
 
         } catch (SQLException e) {
             System.out.println("Erro ao inserir o produto: " + e.getMessage());
-        }    
+        }
     }
-    
+
+    public ProdutosDTO getProduto(int id) {
+        String sql = "SELECT * FROM produtos WHERE id = ?";
+        try {
+
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            ProdutosDTO produto = new ProdutosDTO();
+
+            rs.next();
+            produto.setId(id);
+            produto.setNome(rs.getString("nome"));
+            produto.setValor(rs.getInt("valor"));
+            produto.setStatus(rs.getString("status"));
+
+            return produto;
+
+            //tratando o erro, caso ele ocorra
+        } catch (Exception e) {
+            System.out.println("erro: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void venderProduto(ProdutosDTO produto) {
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+        try {
+            //esse trecho é igual ao método inserir
+            PreparedStatement stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE,
+                    ResultSet.CONCUR_UPDATABLE);
+            //Setando os parâmetros
+            stmt.setString(1, produto.getStatus());
+            stmt.setInt(2, produto.getId());
+            //Executando a query
+            stmt.execute();
+            //tratando o erro, caso ele ocorra
+        } catch (SQLException e) {
+            System.out.println("Erro ao editar o status: " + e.getMessage());
+        }
+    }
+
     public List<ProdutosDTO> getProdutosDTO() {
         String sql = "select id, nome, valor, status from produtos;"; //LIKE nos permite pesquisar por partes de um nome, ao invés de pesquisarmos por todo nome
 
@@ -73,7 +115,7 @@ public class ProdutosDAO {
             return null;
         }
     }
-    
+
     public List<ProdutosDTO> getProdutoStatus(String status) { //parâmetro para buscar a empresa pelo nome
         String sql = "SELECT * FROM produtos WHERE status LIKE ?"; //LIKE nos permite pesquisar por partes de um nome, ao invés de pesquisarmos por todo nome
 
