@@ -73,6 +73,45 @@ public class ProdutosDAO {
             return null;
         }
     }
+    
+    public List<ProdutosDTO> getProdutoStatus(String status) { //parâmetro para buscar a empresa pelo nome
+        String sql = "SELECT * FROM produtos WHERE status LIKE ?"; //LIKE nos permite pesquisar por partes de um nome, ao invés de pesquisarmos por todo nome
+
+        try {
+            PreparedStatement stmt = this.conn.prepareStatement(sql);
+            //Como temos um parâmetro, devemos defini-lo
+            stmt.setString(1, "%" + status + "%"); //Conforme for a palavra ou letra digitada para pesquisa, será buscada antes, no meio e no fim
+            //Método para poder executar o SELECT.
+            //Os resultados obtivos pela consulta serão armazenados na variavel ResultSet
+            ResultSet rs = stmt.executeQuery();
+
+            //Vamos criar um objeto do tipo List
+            //Faça a importação do ArrayList
+            List<ProdutosDTO> listaprodutostatus = new ArrayList<>();
+            //percorrer o resultSet e salvar as informações dentro de uma variável "status"
+            //Depois salva esse objeto dentro da lista
+
+            //Estrutura de repetição While
+            while (rs.next()) { //.next retorna verdadeiro caso exista uma próxima posição dentro do array
+                ProdutosDTO produtos = new ProdutosDTO();
+                //Salvar dentro do objeto empresa as informações            
+                produtos.setId(rs.getInt("id"));
+                produtos.setNome(rs.getString("nome"));
+                produtos.setValor(rs.getInt("valor"));
+                produtos.setStatus(rs.getString("status"));
+                //Adicionando os elementos na lista criada
+                listaprodutostatus.add(produtos);
+
+            }
+            //Após finalizar o while, o retorno será a listaEmpresas, onde cada posição é um registro do banco de dados
+            return listaprodutostatus;
+
+            //Se o método entrar no "Catch" quer dizer que não encontrou nenhuma empresa, então damos um "return null"
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 
     public ArrayList<ProdutosDTO> listarProdutos() {
 
